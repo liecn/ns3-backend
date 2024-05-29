@@ -8,9 +8,12 @@ file(GLOB_RECURSE ASTRA_SIM_CC_FILES "../../../../../astra-sim/*.cc")
 file(GLOB_RECURSE NETWORK_FRONTEND_CC_FILES "../../../../../astra-sim/network_frontend/*/*.cc")
 list(REMOVE_ITEM ASTRA_SIM_CC_FILES ${NETWORK_FRONTEND_CC_FILES})
 
-file(GLOB_RECURSE ET_DEF_CC_FILES "../../../../../extern/graph_frontend/chakra/et_def/*.cc")
-file(GLOB_RECURSE ET_FEEDER_CC_FILES "../../../../../extern/graph_frontend/chakra/et_feeder/*.cpp")
-file(GLOB_RECURSE THIRD_PARTY_CC_FILES "../../../../../extern/graph_frontend/chakra/third_party/utils/*.cc")
+# file(GLOB_RECURSE ET_DEF_CC_FILES "../../../../../extern/graph_frontend/chakra/et_def/*.cc")
+# file(GLOB_RECURSE ET_FEEDER_CC_FILES "../../../../../extern/graph_frontend/chakra/et_feeder/*.cpp")
+# file(GLOB_RECURSE THIRD_PARTY_CC_FILES "../../../../../extern/graph_frontend/chakra/third_party/utils/*.cc")
+file(GLOB_RECURSE ET_DEF_CC_FILES "../../../../../extern/graph_frontend/chakra/schema/protobuf/*.cc")
+file(GLOB_RECURSE ET_FEEDER_CC_FILES "../../../../../extern/graph_frontend/chakra/src/feeder/*.cpp")
+file(GLOB_RECURSE THIRD_PARTY_CC_FILES "../../../../../extern/graph_frontend/chakra/src/third_party/utils/*.cc")
 file(GLOB_RECURSE REMOTE_MEMORY_BACKEND_CC_FILES "../../../../../extern/remote_memory_backend/analytical/*.cc")
 
 set(ASTRA_SIM_CC_FILES

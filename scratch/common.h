@@ -129,7 +129,7 @@ struct FlowInput {
 };
 
 FlowInput flow_input = {0};
-uint32_t flow_num;
+// uint32_t flow_num;
 Ipv4Address node_id_to_ip(uint32_t id) {
   return Ipv4Address(0x0b000001 + ((id / 256) * 0x00010000) +
                      ((id % 256) * 0x00000100));
@@ -203,8 +203,9 @@ void monitor_buffer(FILE *qlen_output, NodeContainer *n) {
     }
   }
   fflush(qlen_output);
-  Simulator::Schedule(NanoSeconds(qlen_mon_interval), &monitor_buffer,
-                      qlen_output, n);
+  if (Simulator::Now().GetTimeStep() < qlen_mon_end){
+    Simulator::Schedule(NanoSeconds(qlen_mon_interval), &monitor_buffer, qlen_output, n);
+  }
 }
 
 void CalculateRoute(Ptr<Node> host) {
@@ -557,13 +558,14 @@ void SetConfig() {
 }
 
 void SetupNetwork(void (*qp_finish)(FILE *, Ptr<RdmaQueuePair>)) {
-
   topof.open(topology_file.c_str());
-  flowf.open(flow_file.c_str());
+  // flowf.open(flow_file.c_str());
   tracef.open(trace_file.c_str());
   uint32_t node_num, switch_num, link_num, trace_num;
   topof >> node_num >> switch_num >> link_num;
-  flowf >> flow_num;
+  std::cout << "node_num " << node_num << " switch_num " << switch_num
+            << " link_num " << link_num << std::endl;
+  // flowf >> flow_num;
   tracef >> trace_num;
 
   std::vector<uint32_t> node_type(node_num, 0);
@@ -833,7 +835,6 @@ void SetupNetwork(void (*qp_finish)(FILE *, Ptr<RdmaQueuePair>)) {
   //
   // add trace
   //
-
   NodeContainer trace_nodes;
   for (uint32_t i = 0; i < trace_num; i++) {
     uint32_t nid;
@@ -843,7 +844,6 @@ void SetupNetwork(void (*qp_finish)(FILE *, Ptr<RdmaQueuePair>)) {
     }
     trace_nodes = NodeContainer(trace_nodes, n.Get(nid));
   }
-
   FILE *trace_output = fopen(trace_output_file.c_str(), "w");
   if (enable_trace)
     qbb.EnableTracing(trace_output, trace_nodes);
@@ -879,11 +879,10 @@ void SetupNetwork(void (*qp_finish)(FILE *, Ptr<RdmaQueuePair>)) {
           portNumber[i][j] = 10000; // each host pair use port number from 10000
       }
   }
-  flow_input.idx = -1;
+  // flow_input.idx = -1;
 
   topof.close();
   tracef.close();
-
   // schedule link down
   if (link_down_time > 0) {
     Simulator::Schedule(Seconds(2) + MicroSeconds(link_down_time),
